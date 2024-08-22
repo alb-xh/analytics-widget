@@ -1,0 +1,17 @@
+import { initializeApp } from 'firebase/app';
+import { getFirestore } from 'firebase/firestore/lite';
+
+export class Firebase {
+  constructor (config) {
+    this.app = initializeApp(config);
+    this.db = getFirestore(app);
+  }
+
+  getApp () {
+    return this.app;
+  }
+
+  getDb () {
+    return this.db;
+  }
+}
