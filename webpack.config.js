@@ -2,7 +2,6 @@ const path = require('path');
 const dotenv = require('dotenv');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const WebpackObfuscator = require('webpack-obfuscator');
 const TerserPlugin = require('terser-webpack-plugin');
 
 const Mode = {
@@ -62,7 +61,7 @@ module.exports = (env, argv) => {
     }
 
     case Mode.Prod: {
-      config.plugins.push(new WebpackObfuscator());
+      break;
     }
   }
 
