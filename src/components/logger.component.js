@@ -8,11 +8,11 @@ export class Logger {
   }
 
   static log (...messages) {
-    console.log(process(messages));
+    console.log(Logger.process(messages));
   }
 
   static error (...messages) {
-    console.error(process(messages));
+    console.error(Logger.process(messages));
   }
 
   static debug (...messages) {
@@ -20,6 +20,6 @@ export class Logger {
       return;
     }
 
-    console.debug(process(messages));
+    Logger.log(...messages);
   }
 }

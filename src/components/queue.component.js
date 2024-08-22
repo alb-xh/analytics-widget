@@ -5,44 +5,59 @@ export class Queue {
   constructor (name, config = {}) {
     this.name = name;
     this.entries = [];
-    this.maxRetries = config?.maxRetries ?? 3;
-    this.waitTimeout = config?.waitTimeout ?? 5000;
+    this.processing = false;
+    this.maxRetries = config?.maxRetries ?? 2;
+    this.waitTimeout = config?.waitTimeout ?? 1000;
     this.cancelTimeout = config?.cancelTimeout ?? 60000;
   }
 
   push (cb) {
-    this.entries.unshift({
+    const entry = {
       cb,
       retries: 0,
       createdAt: new Date().toISOString(),
-    })
+    };
+
+    Logger.debug(`${this.name} Queue`, 'new entry was pushed', entry);
+
+    this.entries.unshift(entry);
+
+    this.process();
   }
 
-  async start () {
-    this.stopped = false;
+  async process () {
+    if (this.processing) {
+      return;
+    }
 
-    while (!this.stopped) {
+    this.processing = true;
+
+    Logger.debug(`${this.name} Queue`, 'processing started');
+
+    while (this.entries.length > 0) {
       const entry = this.entries.pop();
 
-      await this._process(entry);
+      if (entry) {
+        await this.processEntry(entry);
+      }
 
       await Utils.sleep(this.waitTimeout);
     }
+
+    this.processing = false;
+
+    Logger.debug(`${this.name} Queue`, 'processing ended');
   }
 
-  stop () {
-    this.stopped = true;
-  }
-
-  async process (entry) {
+  async processEntry (entry) {
     const retry = () => {
       if (entry.retries >= this.maxRetries) {
-        this.logger.log('Canceled', entry);
+        Logger.error(`${this.name} Queue`, 'canceled', entry);
         return;
       }
 
       entry.retries += 1;
-      entry.unshift(entry);
+      this.entries.unshift(entry);
     };
 
     try {
@@ -52,7 +67,8 @@ export class Queue {
         retry();
       }
     } catch (err) {
-      this.logger.error('Queue', 'Processing failed', err);
+      Logger.error(`${this.name} Queue`, 'processing failed', err);
+
       retry();
     }
   }

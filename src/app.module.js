@@ -2,11 +2,14 @@ import { Config } from "./components/config.component";
 import { Dispatcher } from "./components/dispatcher.component";
 import { Firebase } from "./components/firebase.component";
 import { IpFetcher } from "./components/ip-fetcher.component";
+import { Logger } from "./components/logger.component";
 import { Widget } from "./components/widget.component";
 import { Db } from "./db";
 
 export class AppModule {
   constructor () {
+    Config.validate();
+
     const firebase = new Firebase(Config.getFirebaseConfig());
     const db = new Db(firebase);
     const ipFetcher = new IpFetcher(Config.getIpApiUrl());
@@ -15,6 +18,8 @@ export class AppModule {
 
     this.providers = [ firebase, db, ipFetcher, dispatcher, widget ];
     this.providersMap = new Map(this.providers.map((p) => [ p.constructor.name.toLowerCase(), p ]));
+
+    Logger.debug('AppModule', 'initiated');
   }
 
   get (name) {
