@@ -1,20 +1,25 @@
-// Improve
-export class Logger {
-  constructor (name) {
-    this.name = name;
-  }
+import { Config } from "./config.component";
 
-  process (messages) {
+export class Logger {
+  static process (messages) {
     const stringifiedMessages = messages.map((msg) => JSON.stringify(msg))
     const msg = [ this.name, ...stringifiedMessages ].join(': ');
     return msg;
   }
 
-  log (...messages) {
+  static log (...messages) {
     console.log(process(messages));
   }
 
-  error (...messages) {
+  static error (...messages) {
     console.error(process(messages));
+  }
+
+  static debug (...messages) {
+    if (!Config.getDebug()) {
+      return;
+    }
+
+    console.debug(process(messages));
   }
 }

@@ -2,8 +2,9 @@ const path = require('path');
 const dotenv = require('dotenv');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const WebpackObfuscator = require('webpack-obfuscator');
 
-module.exports = {
+const config = {
   mode: 'development',
   entry: {
     main: path.resolve(__dirname, 'src/main.js'),
@@ -30,7 +31,17 @@ module.exports = {
       template: 'demo/index.html',
     }),
     new webpack.DefinePlugin({
-      'process.env': JSON.stringify(dotenv.config().parsed)
-    })
+      'process.env': JSON.stringify(dotenv.config().parsed),
+    }),
   ],
+};
+
+module.exports = (env, argv) => {
+  config.mode = argv.mode ?? 'development';
+
+  if (config.mode === 'production') {
+    config.plugins.push(new WebpackObfuscator())
+  }
+
+  return config;
 }

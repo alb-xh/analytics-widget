@@ -3,7 +3,6 @@ import { Utils } from "./utils.component";
 
 export class Queue {
   constructor (name, config = {}) {
-    this.logger = new Logger(name);
     this.name = name;
     this.entries = [];
     this.maxRetries = config?.maxRetries ?? 3;
@@ -53,7 +52,7 @@ export class Queue {
         retry();
       }
     } catch (err) {
-      this.logger.error('Processing failed', err);
+      this.logger.error('Queue', 'Processing failed', err);
       retry();
     }
   }

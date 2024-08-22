@@ -4,7 +4,7 @@ export class Widget {
   }
 
   install (window) {
-    window.document.addEventListener("DOMContentLoaded", async function () {
+    window.document.addEventListener("DOMContentLoaded", async () => {
       await this.dispatcher.sendViewEvent();
     });
   }

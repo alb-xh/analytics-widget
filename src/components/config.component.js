@@ -4,6 +4,7 @@ import { Validator } from "./validator.component";
 
 export class Config {
   static validator = new Validator('ConfigSchema', z.object({
+    'DEBUG': z.boolean(),
     'WIDGET_NAME': z.string().min(4).max(30),
     'IP_API_URL': z.string().url(),
     'FIREBASE_API_KEY': z.string().min(4).max(50),
@@ -14,28 +15,30 @@ export class Config {
     'FIREBASE_APP_ID': z.string().min(4).max(50),
   }));
 
-  constructor (env) {
-    Config.validator.validate(env);
-
-    this.env = env;
+  static validate () {
+    return Config.validator.validate(process.env);
   }
 
-  getWidgetName () {
-    return this.env['']
+  static getDebug () {
+    return process.env['DEBUG'];
   }
 
-  getIpApiUrl () {
-    return this.env['IP_API_URL'];
+  static getWidgetName () {
+    return process.env['WIDGET_NAME']
   }
 
-  getFirebaseConfig () {
+  static getIpApiUrl () {
+    return process.env['IP_API_URL'];
+  }
+
+  static getFirebaseConfig () {
     return {
-      apiKey: this.env['FIREBASE_API_KEY'],
-      authDomain: this.env['FIREBASE_AUTH_DOMAIN'],
-      projectId: this.env['FIREBASE_PROJECT_ID'],
-      storageBucket: this.env['FIREBASE_STORAGE_BUCKET'],
-      messagingSenderId: this.env['FIREBASE_MESSAGING_SENDER_ID'],
-      appId: this.env['FIREBASE_APP_ID'],
+      apiKey: process.env['FIREBASE_API_KEY'],
+      authDomain: process.env['FIREBASE_AUTH_DOMAIN'],
+      projectId: process.env['FIREBASE_PROJECT_ID'],
+      storageBucket: process.env['FIREBASE_STORAGE_BUCKET'],
+      messagingSenderId: process.env['FIREBASE_MESSAGING_SENDER_ID'],
+      appId: process.env['FIREBASE_APP_ID'],
     };
   }
 }

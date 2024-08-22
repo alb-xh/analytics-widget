@@ -6,15 +6,14 @@ import { Widget } from "./components/widget.component";
 import { Db } from "./db";
 
 export class AppModule {
-  constructor (env) {
-    const config = new Config(env);
-    const firebase = new Firebase(config.getFirebaseConfig());
+  constructor () {
+    const firebase = new Firebase(Config.getFirebaseConfig());
     const db = new Db(firebase);
-    const ipFetcher = new IpFetcher(config.getIpApiUrl());
+    const ipFetcher = new IpFetcher(Config.getIpApiUrl());
     const dispatcher = new Dispatcher(db, ipFetcher);
     const widget = new Widget(dispatcher);
 
-    this.providers = [ config, firebase, db, ipFetcher, dispatcher, widget ];
+    this.providers = [ firebase, db, ipFetcher, dispatcher, widget ];
     this.providersMap = new Map(this.providers.map((p) => [ p.constructor.name.toLowerCase(), p ]));
   }
 
