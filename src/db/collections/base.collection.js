@@ -29,7 +29,7 @@ export class BaseCollection {
   async find (query) {
     Logger.debug(this.constructor.name, 'find');
 
-    const res = await getDocs(this.collection, query);
+    const res = await getDocs(query);
     const data = res.docs.map(doc => ({ id: doc.id, ...doc.data() }));
 
     return data;

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { and, or, where, query } from 'firebase/firestore/lite';
+import { and, where, query } from 'firebase/firestore/lite';
 
 import { Utils } from "../../components/utils.component";
 import { BaseCollection } from "./base.collection";
