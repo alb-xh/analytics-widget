@@ -20,7 +20,7 @@ export class Config {
   }
 
   static getDebug () {
-    return Boolean(process.env['DEBUG']);
+    return process.env['DEBUG'] === 'true' ? true : false;
   }
 
   static getWidgetName () {

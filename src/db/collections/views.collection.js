@@ -42,7 +42,7 @@ export class ViewsCollection extends BaseCollection {
         updatedAt: now,
         createdAt: doc.createdAt,
       };
-      console.log(doc.id);
+
       await this.update(doc.id, update);
 
       Logger.debug('ViewCollection', 'saveView', 'update', update);

@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WebpackObfuscator = require('webpack-obfuscator');
+const TerserPlugin = require('terser-webpack-plugin');
 
 const Mode = {
   Dev: 'development',
@@ -28,6 +29,17 @@ const config = {
     hot: true,
     compress: true,
     historyApiFallback: true,
+  },
+  optimization: {
+    minimizer: [
+      new TerserPlugin({
+        parallel: true,
+        terserOptions: {
+          keep_classnames: true,
+          keep_fnames: true,
+        },
+      }),
+    ],
   },
   plugins: [
     new webpack.DefinePlugin({
