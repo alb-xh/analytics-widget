@@ -23,10 +23,8 @@ export class ViewsCollection extends BaseCollection {
 
     const doc = await this.findOne(query(this.collection, and(
       where('date', '==', Utils.getDate()),
-      or(
-        where('ip', '==', data.ip),
-        where('visitorId', '==', data.visitorId)
-      )
+      where('ip', '==', data.ip),
+      where('visitorId', '==', data.visitorId)
     )));
 
     Logger.debug('ViewCollection', 'saveView', 'doc', doc);
