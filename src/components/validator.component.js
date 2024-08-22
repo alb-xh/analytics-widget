@@ -1,7 +1,7 @@
 export class Validator {
-  static InvalidValueError = class extends Error () {
-    constructor (schemaName, issues) {
-      super(`Invalid ${schemaName}: ${JSON.stringify(issues)}`);
+  static InvalidValueError = class extends Error {
+    constructor (schemaName, issues, value) {
+      super(`Invalid ${schemaName}: Issues: ${JSON.stringify(issues)}: Value: ${JSON.stringify(value)}`);
     }
   }
 
@@ -11,10 +11,10 @@ export class Validator {
   }
 
   validate (value) {
-    const result = Config.schema.safeParse(value);
+    const result = this.schema.safeParse(value);
 
     if (!result.success) {
-      throw new Config.InvalidConfigError(result.error.issues);
+      throw new Validator.InvalidValueError(this.schemaName, result.error.issues, value);
     }
   }
 }

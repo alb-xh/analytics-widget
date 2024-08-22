@@ -6,14 +6,14 @@ import { Validator } from "../../components/validator.component";
 export class BaseCollection {
   static collectionClassValidator = new Validator('CollectionClassSchema',  z.object({
     'Name': z.string().min(3),
-    'Schema': z.object(),
+    'Schema': z.object({}),
   }));
 
   constructor (db) {
-    BaseCollection.collectionClassValidator.validate(this.constructor);
+    BaseCollection.collectionClassValidator.validate({ ...this.constructor });
 
     this.instanceValidator = new Validator(`${this.constructor.Name} Schema`, this.constructor.Schema);
-    this.collection = collection(db, this.constructor.name);
+    this.collection = collection(db, this.constructor.Name);
   }
 
   async find (query) {

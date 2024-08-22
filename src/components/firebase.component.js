@@ -4,7 +4,7 @@ import { getFirestore } from 'firebase/firestore/lite';
 export class Firebase {
   constructor (config) {
     this.app = initializeApp(config);
-    this.db = getFirestore(app);
+    this.db = getFirestore(this.app);
   }
 
   getApp () {

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "webpack",
+    "build": "webpack --mode=production",
     "dev": "webpack serve"
   },
   "keywords": [],
@@ -17,7 +17,7 @@
     "webpack-dev-server": "^5.0.4"
   },
   "dependencies": {
-    "dotenv-webpack": "^8.1.0",
+    "dotenv": "^16.4.5",
     "firebase": "^10.13.0",
     "zod": "^3.23.8"
   }
