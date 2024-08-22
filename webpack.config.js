@@ -4,14 +4,18 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const WebpackObfuscator = require('webpack-obfuscator');
 
+const Mode = {
+  Dev: 'development',
+  Prod: 'production',
+};
+
 const config = {
-  mode: 'development',
   entry: {
     main: path.resolve(__dirname, 'src/main.js'),
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: '[name]_[contenthash].js',
+    filename: '[name].js',
     clean: true,
   },
   devtool: 'source-map',
@@ -26,10 +30,6 @@ const config = {
     historyApiFallback: true,
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      filename: 'index.html',
-      template: 'demo/index.html',
-    }),
     new webpack.DefinePlugin({
       'process.env': JSON.stringify(dotenv.config().parsed),
     }),
@@ -37,10 +37,21 @@ const config = {
 };
 
 module.exports = (env, argv) => {
-  config.mode = argv.mode ?? 'development';
+  config.mode = argv.mode ?? Mode.Dev;
 
-  if (config.mode === 'production') {
-    config.plugins.push(new WebpackObfuscator())
+  switch (config.mode) {
+    case Mode.Dev: {
+      config.plugins.push(new HtmlWebpackPlugin({
+        filename: 'index.html',
+        template: 'demo/index.html',
+      }));
+
+      break;
+    }
+
+    case Mode.Prod: {
+      config.plugins.push(new WebpackObfuscator());
+    }
   }
 
   return config;
