@@ -1,5 +1,4 @@
 import { Config } from "./config.component";
-import { Logger } from "./logger.component";
 
 export class IpFetcher {
   constructor (apiUrl) {
@@ -7,8 +6,6 @@ export class IpFetcher {
   }
 
   async fetch () {
-    Logger.debug('IpFetcher', 'fetching');
-
     let ip = '85.214.132.117';
 
     if (!Config.getDebug()) {
@@ -17,8 +14,6 @@ export class IpFetcher {
 
       ip = data.ip;
     }
-
-    Logger.debug('IpFetcher', 'ip', ip);
 
     return ip;
   }

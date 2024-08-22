@@ -6,8 +6,10 @@ export class Queue {
     this.name = name;
     this.entries = [];
     this.processing = false;
-    this.maxRetries = config?.maxRetries ?? 2;
-    this.waitTimeout = config?.waitTimeout ?? 1000;
+
+    // Maybe get defaults from .env
+    this.maxRetries = config?.maxRetries ?? 1;
+    this.waitTimeout = config?.waitTimeout ?? 5000;
     this.cancelTimeout = config?.cancelTimeout ?? 60000;
   }
 

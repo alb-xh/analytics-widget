@@ -19,4 +19,13 @@ export class Utils {
       }),
     ]);
   }
+
+  static now () {
+    return new Date().toISOString();
+  }
+
+  static getDate (timestamp = Utils.now()) {
+    const [ date ] = timestamp.split('T');
+    return date;
+  }
 }

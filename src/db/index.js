@@ -1,6 +1,6 @@
 import {  } from 'firebase/firestore/lite';
 
-import { ViewCollection } from "./collections/view.collection";
+import { ViewsCollection } from "./collections/views.collection";
 
 export class Db {
   static InvalidCollectionName = class extends Error {
@@ -11,7 +11,7 @@ export class Db {
 
   constructor (firebase) {
     const db = firebase.getDb();
-    this.viewCollection = new ViewCollection(db);
+    this.viewsCollection = new ViewsCollection(db);
   }
 
   getCollection (name) {

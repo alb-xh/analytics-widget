@@ -1,26 +1,30 @@
 import { Logger } from "./logger.component";
 import { Queue } from "./queue.component";
+import { Utils } from "./utils.component";
 
 export class Dispatcher {
   static eventsQueue = new Queue('Events');
 
-  constructor (db, ipFetcher) {
+  constructor (db, ipFetcher, fingerprint) {
     this.db = db;
     this.ipFetcher = ipFetcher;
+    this.fingerprint = fingerprint;
   }
 
   sendViewEvent () {
-    const viewCollection = this.db.getCollection('view');
+    const viewsCollection = this.db.getCollection('views');
+    const data = {};
 
     Dispatcher.eventsQueue.push(async () => {
-      this.ip = this.ip ?? await this.ipFetcher.fetch();
+      data.visitorId ??= await this.fingerprint.getVisitorId();
 
-      Logger.debug('Dispatcher', 'sendViewEvent', 'ip', this.ip);
+      Logger.debug('Dispatcher', 'sendViewEvent', 'visitorId', data.visitorId);
 
-      await viewCollection.insert({
-        ip: this.ip,
-        createdAt: new Date().toISOString()
-      });
+      data.ip ??= await this.ipFetcher.fetch();
+
+      Logger.debug('Dispatcher', 'sendViewEvent', 'ip', data.ip);
+
+      await viewsCollection.saveView(data);
 
       Logger.debug('Dispatcher', 'sendViewEvent', 'handled');
     });
