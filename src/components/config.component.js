@@ -31,6 +31,10 @@ export class Config {
     return new URL(process.env['IP_API_URL']);
   }
 
+  static getGeoApiUrl () {
+    return new URL(process.env['GEO_API_URL']);
+  }
+
   static getFirebaseConfig () {
     return {
       apiKey: process.env['FIREBASE_API_KEY'],

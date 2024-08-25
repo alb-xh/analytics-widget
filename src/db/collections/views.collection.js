@@ -12,6 +12,7 @@ export class ViewsCollection extends BaseCollection {
   static Schema = z.object({
     ip: z.string().ip().optional(),
     visitorId: z.string().optional(),
+    geo: z.any().optional(), // Investigate better approach later
     count: z.number().int(),
     date: z.string().min(6),
     createdAt: z.string().datetime(),

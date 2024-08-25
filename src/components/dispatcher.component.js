@@ -5,10 +5,11 @@ import { Utils } from "./utils.component";
 export class Dispatcher {
   static eventsQueue = new Queue('Events');
 
-  constructor (db, ipFetcher, fingerprint) {
+  constructor (db, fingerprint, ipFetcher, geoLookup) {
     this.db = db;
-    this.ipFetcher = ipFetcher;
     this.fingerprint = fingerprint;
+    this.ipFetcher = ipFetcher;
+    this.geoLookup = geoLookup;
   }
 
   sendViewEvent () {
@@ -23,6 +24,12 @@ export class Dispatcher {
       data.ip ??= await this.ipFetcher.fetch();
 
       Logger.debug('Dispatcher', 'sendViewEvent', 'ip', data.ip);
+
+      if (data.ip) {
+        data.geo ??= await this.geoLookup.lookup();
+
+        Logger.debug('Dispatcher', 'sendViewEvent', 'geo', data.geo);
+      }
 
       await viewsCollection.saveView(data);
 
