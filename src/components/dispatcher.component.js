@@ -26,7 +26,7 @@ export class Dispatcher {
       Logger.debug('Dispatcher', 'sendViewEvent', 'ip', data.ip);
 
       if (data.ip) {
-        data.geo ??= await this.geoLookup.lookup();
+        data.geo ??= await this.geoLookup.lookup(data.ip);
 
         Logger.debug('Dispatcher', 'sendViewEvent', 'geo', data.geo);
       }
