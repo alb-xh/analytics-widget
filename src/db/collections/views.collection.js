@@ -4,9 +4,10 @@ import { and, where, query } from 'firebase/firestore/lite';
 import { Utils } from "../../components/utils.component";
 import { BaseCollection } from "./base.collection";
 import { Logger } from "../../components/logger.component";
+import { CollectionNameResolver } from "../components/collection-name.resolver";
 
 export class ViewsCollection extends BaseCollection {
-  static Name = 'views';
+  static Name = CollectionNameResolver.resolve('views');
 
   static Schema = z.object({
     ip: z.string().ip().optional(),

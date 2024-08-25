@@ -5,7 +5,7 @@ export class Widget {
     this.dispatcher = dispatcher;
   }
 
-  install (window) {
+  install () {
     Logger.debug('Widget', 'installation started');
 
     window.document.addEventListener("DOMContentLoaded", async () => {

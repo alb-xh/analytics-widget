@@ -9,61 +9,53 @@ const Mode = {
   Prod: 'production',
 };
 
-const config = {
-  entry: {
-    main: path.resolve(__dirname, 'src/main.js'),
-  },
-  output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: '[name].js',
-    clean: true,
-  },
-  devtool: 'source-map',
-  devServer: {
-    static: {
-      directory: path.resolve(__dirname, 'dist'),
-    },
-    port: 3000,
-    open: true,
-    hot: true,
-    compress: true,
-    historyApiFallback: true,
-  },
-  optimization: {
-    minimizer: [
-      new TerserPlugin({
-        parallel: true,
-        terserOptions: {
-          keep_classnames: true,
-          keep_fnames: true,
-        },
-      }),
-    ],
-  },
-  plugins: [
-    new webpack.DefinePlugin({
-      'process.env': JSON.stringify(dotenv.config().parsed),
-    }),
-  ],
-};
-
 module.exports = (env, argv) => {
-  config.mode = argv.mode ?? Mode.Dev;
+  const mode = argv.mode ?? Mode.Dev;
 
-  switch (config.mode) {
-    case Mode.Dev: {
-      config.plugins.push(new HtmlWebpackPlugin({
+  const processEnv = dotenv.config().parsed;
+  processEnv.DEBUG = mode === Mode.Dev;
+
+  return {
+    mode,
+    entry: {
+      [processEnv.WIDGET_NAME]: path.resolve(__dirname, 'src/main.js'),
+    },
+    output: {
+      path: path.resolve(__dirname, 'dist'),
+      filename: '[name].js',
+      clean: true,
+    },
+    devtool: 'source-map',
+    devServer: {
+      static: {
+        directory: path.resolve(__dirname, 'dist'),
+      },
+      port: 3000,
+      open: true,
+      hot: true,
+      compress: true,
+      historyApiFallback: true,
+    },
+    optimization: {
+      minimizer: [
+        new TerserPlugin({
+          parallel: true,
+          terserOptions: {
+            keep_classnames: true,
+            keep_fnames: true,
+          },
+        }),
+      ],
+    },
+    plugins: [
+      new webpack.DefinePlugin({
+        'process.env': JSON.stringify(processEnv),
+      }),
+      mode === Mode.Dev && new HtmlWebpackPlugin({
         filename: 'index.html',
         template: 'demo/index.html',
-      }));
-
-      break;
-    }
-
-    case Mode.Prod: {
-      break;
-    }
-  }
-
-  return config;
+        inject: false,
+      })
+    ],
+  };
 }

@@ -4,7 +4,7 @@ import { Validator } from "./validator.component";
 
 export class Config {
   static validator = new Validator('ConfigSchema', z.object({
-    'DEBUG': z.enum([ 'true', 'false' ]),
+    'DEBUG': z.boolean(),
     'WIDGET_NAME': z.string().min(4).max(30),
     'IP_API_URL': z.string().url(),
     'FIREBASE_API_KEY': z.string().min(4).max(50),
@@ -20,11 +20,11 @@ export class Config {
   }
 
   static getDebug () {
-    return process.env['DEBUG'] === 'true' ? true : false;
+    return process.env['DEBUG'];
   }
 
   static getWidgetName () {
-    return process.env['WIDGET_NAME']
+    return process.env['WIDGET_NAME'];
   }
 
   static getIpApiUrl () {

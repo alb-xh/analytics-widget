@@ -4,7 +4,7 @@ import { collection, getDocs, addDoc, getDoc, doc, updateDoc } from 'firebase/fi
 import { Validator } from "../../components/validator.component";
 import { Logger } from "../../components/logger.component";
 
-// Add more base methods
+// clean code a bit
 export class BaseCollection {
   static collectionClassValidator = new Validator('CollectionClassSchema',  z.object({
     'Name': z.string().min(3),
