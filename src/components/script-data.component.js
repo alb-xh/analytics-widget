@@ -4,7 +4,7 @@ export class ScriptData {
   static get () {
     const scripts = Array.from(window.document.getElementsByTagName('script'));
     const script = scripts.find((s) => {
-      const src = s.getAttribute('src');
+      const src = s.getAttribute('src') ?? '';
       return src.endsWith(`${Config.getWidgetName()}.js`);
     });
 
