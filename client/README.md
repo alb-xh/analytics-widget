@@ -2,6 +2,7 @@
 
 ## Development
 
+* `cd client`
 * `nvm use`
 * `cp .env.dev .env` (fill necessary data)
 * `npm i`
@@ -9,6 +10,7 @@
 
 ## Deployment
 
+* `cd client`
 * `nvm use`
 * `touch .env` (fill necessary data)
 * `npm i`

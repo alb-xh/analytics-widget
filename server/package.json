@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "dev:notify": "functions-framework --target=notify",
-    "deploy:notify": "gcloud functions deploy notify --gen2 --runtime=nodejs20 --source=.src/main.js --entry-point=notify --trigger-http --allow-unauthenticated"
+    "list": "./scripts/list.sh",
+    "dev": "./scripts/dev.sh",
+    "deploy": "PRE='./scripts/build.sh' ./scripts/deploy.sh"
   },
   "keywords": [],
   "author": "",
