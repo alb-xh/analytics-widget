@@ -22,7 +22,7 @@ export class HttpFn {
 
         response = await handler(req, res, ctx) ?? new Ok();;
       } catch (err) {
-        logger.error(`${ctx.name}: ${JSON.stringify(err)}`);
+        logger.error(`${ctx.name}: ${err.toString()}`);
 
         response = new InternalServerError();
       } finally {

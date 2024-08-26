@@ -1,7 +1,11 @@
 import nodemailer from 'nodemailer';
 import logger from 'loglevel';
 
+import { initializeApp } from 'firebase/app';
+import { getFirestore, getDoc, doc } from 'firebase/firestore/lite';
+
 import { HttpFn } from '../common/http-fn.js';
+import { BadRequest, NotFound } from '../common/responses.js';
 import { Config } from './config.js';
 
 const config = new Config();
@@ -9,23 +13,33 @@ const config = new Config();
 config.load();
 logger.setLevel(config.isProd() ? 'INFO' : 'DEBUG');
 
-const smtp = config.getSMTP();
-const transporter = nodemailer.createTransport(smtp);
+const firebaseConfig = config.getFirebaseConfig()
+const smtpConfig = config.getSmtpConfig();
+
+const db = getFirestore(initializeApp(firebaseConfig));
+const transporter = nodemailer.createTransport(smtpConfig);
+
 
 // Notify myself
 HttpFn.create({ name: 'main', method: 'POST' }, async (req, res, ctx) => {
-  // await transporter.sendMail({
-  //   from: smtp.auth.user,
-  //   to: smtp.auth.user,
-  //   subject: '👋 Hello from Node.js 🚀',
-  //   text: 'This is a test email sent from Node.js using nodemailer. 📧💻'
-  // });
+  const collection = req?.body?.collection?.toString();
+  const docId = req?.body?.id?.toString();
 
-  console.log({
-    from: smtp.auth.user,
-    to: smtp.auth.user,
-    subject: '👋 Hello from Node.js 🚀',
-    text: 'This is a test email sent from Node.js using nodemailer. 📧💻'
+  if (!collection || !docId) {
+    return new BadRequest();
+  }
+
+  const document = await getDoc(doc(db, collection, docId));
+
+  if (!document.exists()) {
+    return new NotFound();
+  }
+
+  await transporter.sendMail({
+    from: smtpConfig.auth.user,
+    to: smtpConfig.auth.user,
+    subject: `${collection}:document:${docId}:New view`,
+    text: `\`\`\`\n${JSON.stringify(document.data(), null, 2)}\n\`\`\``
   });
 
   logger.debug(`${ctx.name}: email sent`);
