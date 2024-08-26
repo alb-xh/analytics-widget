@@ -4,10 +4,10 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "list": "./scripts/list.sh",
     "start": "./scripts/start.sh",
     "dev": "NODE_ENV=development  nodemon --exec npm run start",
-    "deploy": "PRE='./scripts/build.sh' ./scripts/deploy.sh"
+    "_build": "./scripts/build.sh",
+    "deploy": "PRE='npm run _build' ./scripts/deploy.sh"
   },
   "keywords": [],
   "author": "",

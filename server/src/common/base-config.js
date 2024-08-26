@@ -11,7 +11,8 @@ export const Env = {
 export class BaseConfig {
   constructor (schema) {
     this.validator = new Validator('Config', schema.extend({
-      NODE_ENV: z.enum(Object.values(Env)),
+      NODE_ENV: z.enum(Object.values(Env))
+        .default(Env.Prod),
     }));
   }
 

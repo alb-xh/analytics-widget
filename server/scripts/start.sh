@@ -1,7 +1,7 @@
 #!/bin/bash
 
-FILE=./src/"$1"/index.js
+DIR=./src/"$1"
 
-[[ ! -f $FILE ]] && { echo "Please specify appropriate function name"; exit 1; }
+[[ ! -d $DIR ]] && { echo "Please specify appropriate function name"; exit 1; }
 
-functions-framework --target=main --source=$FILE --reload
+functions-framework --target=main --source=$DIR --reload

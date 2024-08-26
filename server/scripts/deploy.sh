@@ -1,6 +1,6 @@
 #!/bin/bash
 
-[[ ! -f ./src/"$1".js ]] && { echo "Please specify appropriate function name"; exit 1; }
+[[ ! -d ./src/"$1" ]] && { echo "Please specify appropriate function name"; exit 1; }
 [[ ! -z "$PRE" ]] && { $PRE "$@"; }
 [[ ! -d ./dist ]] && { echo "Please build the function first"; exit 1; }
 
