@@ -20,7 +20,11 @@ const db = getFirestore(initializeApp(firebaseConfig));
 const transporter = nodemailer.createTransport(smtpConfig);
 
 // Notify myself
-HttpFn.create({ name: 'main', method: 'POST' }, async (req, res, ctx) => {
+HttpFn.create({
+  name: 'main',
+  method: 'POST',
+  cors: false,
+}, async (req, res, ctx) => {
   const collection = req?.body?.collection?.toString();
   const docId = req?.body?.id?.toString();
 

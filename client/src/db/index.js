@@ -1,5 +1,3 @@
-import {  } from 'firebase/firestore/lite';
-
 import { ViewsCollection } from "./collections/views.collection";
 
 export class Db {
@@ -9,9 +7,9 @@ export class Db {
     }
   }
 
-  constructor (firebase) {
+  constructor (firebase, notify) {
     const db = firebase.getDb();
-    this.viewsCollection = new ViewsCollection(db);
+    this.viewsCollection = new ViewsCollection(db, notify);
   }
 
   getCollection (name) {

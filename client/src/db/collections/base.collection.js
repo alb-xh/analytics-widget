@@ -56,7 +56,12 @@ export class BaseCollection {
 
     this.instanceValidator.validate(data);
 
-    await addDoc(this.collection, data);
+    const document = await addDoc(this.collection, data);
+
+    // Improve later
+    if (this.afterInsert) {
+      await this.afterInsert({ ...data, id: document.id });
+    }
   }
 
   // Only full updates for now

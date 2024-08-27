@@ -19,6 +19,11 @@ export class ViewsCollection extends BaseCollection {
     updatedAt: z.string().datetime(),
   });
 
+  constructor (db, notify) {
+    super(db);
+    this.notify = notify
+  }
+
   // Transaction needed or investigate the api in depth
   async saveView (data) {
     Logger.debug('ViewCollection', 'saveView', data);
@@ -61,5 +66,17 @@ export class ViewsCollection extends BaseCollection {
     await this.insert(insert);
 
     Logger.debug('ViewCollection', 'saveView', 'insert', insert);
+  }
+
+  async afterInsert (document) {
+    try {
+      Logger.debug('ViewCollection', 'afterInsert', 'triggered');
+
+      await this.notify.send({ collection: ViewsCollection.Name, id: document.id });
+
+      Logger.debug('ViewCollection', 'afterInsert', 'success');
+    } catch (err) {
+      Logger.error('ViewCollection', 'afterInsert', 'failed', err);
+    }
   }
 }
