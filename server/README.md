@@ -4,6 +4,7 @@
 
 * `cd server`
 * `nvm use`
+* `cp .env.dev .env` (fill necessary data)
 * `npm i`
 * `npm run dev {functionName}`
 
@@ -11,5 +12,6 @@
 
 * `cd server`
 * `nvm use`
+* `cp .env.dev .env` (fill necessary data)
 * `npm i`
 * `npm run deploy {functionName}`
