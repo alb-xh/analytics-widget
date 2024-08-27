@@ -19,7 +19,6 @@ const smtpConfig = config.getSmtpConfig();
 const db = getFirestore(initializeApp(firebaseConfig));
 const transporter = nodemailer.createTransport(smtpConfig);
 
-
 // Notify myself
 HttpFn.create({ name: 'main', method: 'POST' }, async (req, res, ctx) => {
   const collection = req?.body?.collection?.toString();
@@ -39,7 +38,7 @@ HttpFn.create({ name: 'main', method: 'POST' }, async (req, res, ctx) => {
     from: smtpConfig.auth.user,
     to: smtpConfig.auth.user,
     subject: `${collection}:document:${docId}:New view`,
-    text: `\`\`\`\n${JSON.stringify(document.data(), null, 2)}\n\`\`\``
+    html: `<pre>${JSON.stringify(document.data(), null, 2)}</pre>`,
   });
 
   logger.debug(`${ctx.name}: email sent`);
