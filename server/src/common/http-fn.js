@@ -21,7 +21,6 @@ export class HttpFn {
           res
             .set('Access-Control-Allow-Methods', nMethod)
             .set('Access-Control-Allow-Headers', '*') // Maybe improve in future
-            .set('Ac')
             .status(204)
             .send('');
 
