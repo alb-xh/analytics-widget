@@ -1,18 +1,15 @@
-export class Notify {
-  constructor (apiUrl) {
-    this.apiUrl = new URL(apiUrl);
-  }
+import { Config } from "./config.component";
 
+export class Notify {
   async send (data) {
-    const res = await fetch(this.apiUrl, {
+    return fetch(Config.getNotifyApiUrl(), {
       method: 'POST',
       body: JSON.stringify(data),
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json'
       },
-    });
-
-    return res.json();
+      credentials: 'omit',
+    }).then((r) => r.json());
   }
 }

@@ -10,9 +10,10 @@ export class ViewsCollection extends BaseCollection {
   static Name = CollectionNameResolver.resolve('views');
 
   static Schema = z.object({
-    ip: z.string().ip().optional(),
-    visitorId: z.string().optional(),
-    geo: z.any().optional(), // Investigate better approach later
+    ip: z.string().ip().nullable().optional(),
+    visitorId: z.string().nullable().optional(),
+    geo: z.any().nullable().optional(), // Investigate better approach later,
+    userAgent: z.string(),
     count: z.number().int(),
     date: z.string().min(6),
     createdAt: z.string().datetime(),

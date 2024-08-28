@@ -1,7 +1,8 @@
-import { Config } from "./config.component";
+import { Config } from "../config.component";
+import { Logger } from "../logger.component";
 
-export class GeoLookup {
-  static mockData = {
+export class GeoDataResolver {
+  static mockGeoInfo = {
     "ipVersion": 4,
     "ipAddress": "46.252.47.162",
     "latitude": 41.327499,
@@ -28,18 +29,22 @@ export class GeoLookup {
     ]
   };
 
-  constructor (apiUrl) {
-    this.apiUrl = new URL(apiUrl);
+  async resolve (data) {
+    data.geo = await this.resolveGeo(data);
+
+    Logger.debug('GeoDataResolver', 'geo', data.geo);
   }
 
-  async lookup (ip) {
-    let data = GeoLookup.mockData;
-
-    if (!Config.getDebug()) {
-      const res = await fetch(new URL(ip, this.apiUrl));
-      data = await res.json();
+  async resolveGeo (data) {
+    if (Config.getDebug()) {
+      return GeoDataResolver.mockGeoInfo;
     }
 
-    return data;
+    if (!data.ip) {
+      return null;
+    }
+
+    return fetch(new URL(data.ip, Config.getGeoApiUrl()))
+      .then((r) => r.json());
   }
 }
