@@ -1,8 +1,8 @@
-# analytics-widget-server
+# analytics-widget-serverless
 
 ## Development
 
-* `cd server`
+* `cd serverless`
 * `nvm use`
 * `cp .env.dev .env` (fill necessary data)
 * `npm i`
@@ -10,7 +10,7 @@
 
 ## Deployment
 
-* `cd server`
+* `cd serverless`
 * `nvm use`
 * `cp .env.dev .env` (fill necessary data)
 * `npm i`
