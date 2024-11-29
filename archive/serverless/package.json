@@ -1,5 +1,5 @@
 {
-  "name": "analytics-widget-server",
+  "name": "analytics-widget-serverless",
   "version": "1.0.0",
   "type": "module",
   "main": "index.js",

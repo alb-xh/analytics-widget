@@ -4,20 +4,7 @@ import { BaseConfig } from "../common/base-config.js";
 
 export class Config extends BaseConfig {
   constructor () {
-    super (z.object({
-      SMTP_SERVICE: z.string(),
-      SMTP_HOST: z.string(),
-      SMTP_PORT: z.preprocess(Number, z.number()),
-      SMTP_SECURE: z.preprocess(Boolean, z.boolean()),
-      SMTP_USER: z.string().email(),
-      SMTP_PASS: z.string(),
-      FIREBASE_API_KEY: z.string(),
-      FIREBASE_AUTH_DOMAIN: z.string(),
-      FIREBASE_PROJECT_ID: z.string(),
-      FIREBASE_STORAGE_BUCKET: z.string(),
-      FIREBASE_MESSAGING_SENDER_ID: z.string(),
-      FIREBASE_APP_ID: z.string(),
-    }));
+    super ();
   }
 
   getSmtpConfig () {
