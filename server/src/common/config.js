@@ -12,6 +12,7 @@ export class Config {
     NODE_ENV: z.enum(Object.values(Env))
       .default(Env.Prod),
     SERVER_PORT: z.preprocess(Number, z.number()),
+    DB_PATH: z.string(),
     SMTP_SERVICE: z.string(),
     SMTP_HOST: z.string(),
     SMTP_PORT: z.preprocess(Number, z.number()),
@@ -26,13 +27,16 @@ export class Config {
     const { success, error } = Config.schema.safeParse(process.env);
 
     if (!success) {
-      throw new Config.Error(`Issues: ${JSON.stringify(error.issues)}: Value: ${JSON.stringify(value)}`)
+      throw new Config.Error(`Issues: ${JSON.stringify(error.issues)}: Value: ${JSON.stringify(process.env)}`)
     }
 
     return {
       env: process.env['NODE_ENV'],
       server: {
         port: process.env['SERVER_PORT'],
+      },
+      db: {
+        path: process.env['DB_PATH'],
       },
       smtp: {
         service: process.env['SMTP_SERVICE'],

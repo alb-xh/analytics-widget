@@ -4,13 +4,13 @@ import { BaseController } from "./base.controller.js";
 export class EventsController extends BaseController {
   static Error = customError('EventsController');
 
-  constructor () {
+  constructor (db) {
     super('/events');
+
+    this.db = db;
   }
 
   get (req, res) {
-    res.writeHead(200, { 'Content-Type': 'application/json' })
-    res.write(JSON.stringify({ message: 'Hello World' }))
-    res.end();
+    res.ok({ message: 'Hello World' });
   }
 }

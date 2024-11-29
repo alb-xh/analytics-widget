@@ -1,29 +1,34 @@
 import http from 'node:http';
+import path from 'node:path';
+import logger from 'loglevel';
+import Database from 'better-sqlite3';
 
-import { Config } from './common/index.js';
-import * as controllerMap from './controllers/index.js';
+import { Config, Request, Response, Env } from './common/index.js';
+import { InMemoryCache, RateLimiter } from './components/index.js';
+import { EventsController } from './controllers/index.js';
 
 const config = Config.load();
+logger.setLevel(config.env === Env.Dev ? 'DEBUG' : 'INFO')
 
-// No fallbacks for now
-const controllers = Object.values(controllerMap)
-  .map((controller) => new controller());
+const db = new Database(path.resolve('..', config.db.path));
+const rateLimiter = new RateLimiter(new InMemoryCache());
+const controllers = [
+  new EventsController(db),
+];
 
-// I don't want to use express, just for fun
-const server = http.createServer(async (req, res) => {
+const server = http.createServer(async (request, response) => {
+  const req = new Request(request);
+  const res = new Response(response);
+
+  if (!req.getIp()) return res.badRequest('Invalid request');
+  if (!rateLimiter.grantAccess(req.getIp())) return res.forbidden('Too many requests');
+
   const controller = controllers.find((controller) => controller.supports(req));
-
-  if (!controller) {
-    res.writeHead(404, { 'Content-Type': 'application/json' });
-    res.write(JSON.stringify({ message: 'Resource or Method not found' }));
-    res.end();
-
-    return;
-  }
+  if (!controller) return res.notFound('Resource or Method not found');
 
   await controller.handle(req, res);
 });
 
 server.listen(config.server.port, () => {
-  console.log('Server is listening');
+  logger.info('Server is listening');
 });

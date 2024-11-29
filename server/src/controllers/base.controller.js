@@ -1,3 +1,5 @@
+import logger from 'loglevel';
+
 import { customError } from '../common/index.js';
 
 export class BaseController {
@@ -12,8 +14,7 @@ export class BaseController {
   }
 
   supports (req) {
-    const [ pathname ] = (req.url ?? '/').split('?');
-    return pathname === this.resource && req.method.toLowerCase() in this; // Maybe a bit risky
+    return req.getResource() === this.resource && req.getMethod().toLowerCase() in this;
   }
 
   handle (req, res) {
@@ -21,7 +22,9 @@ export class BaseController {
       throw new BaseController.Error('Unsupported request');
     }
 
-    const handler = this[req.method.toLowerCase()];
+    logger.info(`${req.getMethod()} ${this.resource}`);
+
+    const handler = this[req.getMethod().toLowerCase()];
 
     return handler(req, res);
   }
