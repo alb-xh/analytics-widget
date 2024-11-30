@@ -26,6 +26,6 @@ export class BaseController {
 
     const handler = this[req.getMethod().toLowerCase()];
 
-    return handler(req, res);
+    return handler.call(this, req, res);
   }
 }

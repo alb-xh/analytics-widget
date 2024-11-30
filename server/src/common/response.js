@@ -21,6 +21,10 @@ export class Response {
     this.json(404, { message });
   }
 
+  serverError (message = 'Internal Server Error') {
+    this.json(500, { message });
+  }
+
   ok (body) {
     this.json(200, body);
   }
