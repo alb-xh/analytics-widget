@@ -17,7 +17,7 @@ const rateLimiter = new RateLimiter(new InMemoryCache());
 const geoApi = new GeoApi(config.api.geo.url);
 
 const controllers = [
-  new EventsController(config.api.key, eventsCollection, geoApi),
+  new EventsController(config.api.key, config.api.origin, eventsCollection, geoApi),
 ];
 
 const server = http.createServer(async (request, response) => {
@@ -38,12 +38,6 @@ const server = http.createServer(async (request, response) => {
   }
 });
 
-const main = async () => {
-  await db.connect();
-
-  server.listen(config.server.port, () => {
-    logger.info('Server is listening');
-  });
-};
-
-main();
+server.listen(config.server.port, () => {
+  logger.info('Server is listening');
+});

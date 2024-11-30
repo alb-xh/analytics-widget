@@ -21,10 +21,11 @@ export class EventsController extends BaseController {
     timestamp: z.preprocess((str) => new Date(str), z.date())
   })
 
-  constructor (apiKey, eventsCollection, geoApi) {
+  constructor (apiKey, apiOrigin, eventsCollection, geoApi) {
     super('/events');
 
     this.apiKey = apiKey;
+    this.apiOrigin = apiOrigin;
     this.eventsCollection = eventsCollection;
     this.geoApi = geoApi;
   }
@@ -49,6 +50,10 @@ export class EventsController extends BaseController {
   }
 
   async post (req, res) {
+    if (!this.apiOrigin.includes(req.getOrigin())) {
+      return res.forbidden();
+    }
+
     const { success, error, data } = EventsController.PostBodySchema.safeParse(await req.getBody());
     if (!success) {
       logger.error(error);

@@ -28,6 +28,10 @@ export class Request {
     return this.req.headers['authorization'];
   }
 
+  getOrigin () {
+    return this.req.headers['origin'];
+  }
+
   async getBody () {
     return requestData(this.req);
   }

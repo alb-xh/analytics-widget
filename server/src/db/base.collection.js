@@ -18,8 +18,8 @@ export class BaseCollection {
     await this.db.insert({ ...entry, collection: this.name });
   }
 
-  async find (filterCb) {
-    const entries = await this.db.find((entry) => entry.collection === this.name && filterCb(entry))
+  async find (filterCb, options) {
+    const entries = await this.db.find((entry) => entry.collection === this.name && filterCb(entry), options);
     return entries.map(({ collection, ...entry }) => entry);
   }
 }
