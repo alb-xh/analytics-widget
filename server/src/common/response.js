@@ -13,6 +13,10 @@ export class Response {
     this.json(400, { message })
   }
 
+  unauthorized (message = 'Unauthorized') {
+    this.json(401, { message });
+  }
+
   forbidden (message = 'Forbidden') {
     this.json(403, { message });
   }
@@ -27,5 +31,9 @@ export class Response {
 
   ok (body) {
     this.json(200, body);
+  }
+
+  created (message = 'Created') {
+    this.json(201, { message });
   }
 }

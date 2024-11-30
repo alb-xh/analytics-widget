@@ -13,6 +13,7 @@ export class Config {
       .default(Env.Prod),
     SERVER_PORT: z.preprocess(Number, z.number()),
     DB_PATH: z.string(),
+    API_KEY: z.string(),
     API_GEO_URL: z.string(),
     SMTP_SERVICE: z.string(),
     SMTP_HOST: z.string(),
@@ -40,7 +41,10 @@ export class Config {
         path: process.env['DB_PATH'],
       },
       api: {
-        geo: process.env['API_GEO_URL'],
+        key: process.env['API_KEY'],
+        geo: {
+          url: process.env['API_GEO_URL'],
+        },
       },
       smtp: {
         service: process.env['SMTP_SERVICE'],

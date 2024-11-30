@@ -1,3 +1,5 @@
+import { URLSearchParams } from 'node:url';
+
 import { requestData } from "./request-data.js";
 
 export class Request {
@@ -22,7 +24,16 @@ export class Request {
     return this.req.headers['user-agent'];
   }
 
+  getAuthorization () {
+    return this.req.headers['authorization'];
+  }
+
   async getBody () {
     return requestData(this.req);
+  }
+
+  getQuery () {
+    const [ _, queryStr = '' ] = (this.req.url ?? '/').split('?');
+    return Object.fromEntries(new URLSearchParams(queryStr));
   }
 }

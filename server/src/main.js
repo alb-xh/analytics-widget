@@ -1,21 +1,23 @@
 import http from 'node:http';
-import path from 'node:path';
 import logger from 'loglevel';
 
 import { Config, Request, Response, Env } from './common/index.js';
 import { InMemoryCache, RateLimiter } from './components/index.js';
 import { EventsController } from './controllers/index.js';
+import { DB, EventsCollection } from './db/index.js';
 import { GeoApi } from './apis/index.js';
 
 const config = Config.load();
-logger.setLevel(config.env === Env.Dev ? 'DEBUG' : 'INFO')
+logger.setLevel(config.env === Env.Dev ? 'DEBUG' : 'INFO');
 
-const db = {}
+const db = new DB(config.db.path);
+const eventsCollection = new EventsCollection(db);
+
 const rateLimiter = new RateLimiter(new InMemoryCache());
-const geoApi = new GeoApi(config.api.geo);
+const geoApi = new GeoApi(config.api.geo.url);
 
 const controllers = [
-  new EventsController(db, geoApi),
+  new EventsController(config.api.key, eventsCollection, geoApi),
 ];
 
 const server = http.createServer(async (request, response) => {
@@ -36,7 +38,12 @@ const server = http.createServer(async (request, response) => {
   }
 });
 
-server.listen(config.server.port, () => {
-  logger.info('Server is listening');
-});
+const main = async () => {
+  await db.connect();
 
+  server.listen(config.server.port, () => {
+    logger.info('Server is listening');
+  });
+};
+
+main();
