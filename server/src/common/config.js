@@ -26,34 +26,34 @@ export class Config {
   static load () {
     dotenv.config();
 
-    const { success, error } = Config.schema.safeParse(process.env);
+    const { success, error, data } = Config.schema.safeParse(process.env);
 
     if (!success) {
       throw new Config.Error(`Issues: ${JSON.stringify(error.issues)}: Value: ${JSON.stringify(process.env)}`)
     }
 
     return {
-      env: process.env['NODE_ENV'],
+      env: data['NODE_ENV'],
       server: {
-        port: process.env['SERVER_PORT'],
+        port: data['SERVER_PORT'],
       },
       db: {
-        path: process.env['DB_PATH'],
+        path: data['DB_PATH'],
       },
       api: {
-        key: process.env['API_KEY'],
+        key: data['API_KEY'],
         geo: {
-          url: process.env['API_GEO_URL'],
+          url: data['API_GEO_URL'],
         },
       },
       smtp: {
-        service: process.env['SMTP_SERVICE'],
-        host: process.env['SMTP_HOST'],
-        port: process.env['SMTP_PORT'],
-        secure: process.env['SMTP_SECURE'],
+        service: data['SMTP_SERVICE'],
+        host: data['SMTP_HOST'],
+        port: data['SMTP_PORT'],
+        secure: data['SMTP_SECURE'],
         auth: {
-          user: process.env['SMTP_USER'],
-          pass: process.env['SMTP_PASS'],
+          user: data['SMTP_USER'],
+          pass: data['SMTP_PASS'],
         },
       },
     };

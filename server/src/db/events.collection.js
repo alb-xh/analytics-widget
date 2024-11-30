@@ -12,7 +12,7 @@ export class EventsCollection extends BaseCollection {
         type: z.enum(Object.values(EventType)),
         ip: z.string().ip(),
         userAgent: z.string(),
-        geo: z.object(z.any()),
+        geo: z.object({}).passthrough(),
         timestamp: z.date(),
       }),
       db,

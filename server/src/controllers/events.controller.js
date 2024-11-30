@@ -34,32 +34,28 @@ export class EventsController extends BaseController {
       return res.unauthorized();
     }
 
-    const query = req.getQuery();
-    const queryValidation = EventsController.GetQuerySchema.safeParse(query);
-
-    if (!queryValidation.success) {
-      logger.error(queryValidation.error);
+    const { success, error, data } = EventsController.GetQuerySchema.safeParse(req.getQuery());
+    if (!success) {
+      logger.error(error);
       return res.badRequest();
     }
 
-    const { type, app, offset, limit } = query;
+    const { type, app, offset, limit } = data;
 
     const results = await this.eventsCollection
-      .find((e) => e.type === type && e.app === app, { offset, limit });
+      .find((entry) => entry.type === type && entry.app === app, { offset, limit });
 
     res.ok({ results });
   }
 
   async post (req, res) {
-    const body = await req.getBody();
-
-    const bodyValidation = EventsController.PostBodySchema.safeParse(body);
-    if (!bodyValidation.success) {
-      logger.error(bodyValidation.error);
+    const { success, error, data } = EventsController.PostBodySchema.safeParse(await req.getBody());
+    if (!success) {
+      logger.error(error);
       return res.badRequest();
     }
 
-    const { app, type, timestamp } = body
+    const { app, type, timestamp } = data;
     const ip = req.getIp()
     const userAgent = req.getUserAgent();
 
@@ -67,6 +63,6 @@ export class EventsController extends BaseController {
 
     await this.eventsCollection.insert({ app, type, timestamp, ip, userAgent, geo })
 
-    res.create();
+    res.created();
   }
 }

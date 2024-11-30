@@ -9,7 +9,7 @@ export class BaseCollection {
     const { success, error } = this.schema.safeParse(entry);
 
     if (!success) {
-      throw Error(`${this.name} collection: Invalid entry: ${error.issues}`);
+      throw Error(`${this.name} collection: Invalid entry: ${JSON.stringify(error.issues)}`);
     }
   }
 
