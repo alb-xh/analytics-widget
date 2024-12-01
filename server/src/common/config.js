@@ -16,6 +16,7 @@ export class Config {
     API_KEY: z.string(),
     API_ORIGIN: z.preprocess((str) => str.split(','), z.array(z.string().url())),
     API_GEO_URL: z.string(),
+    JOB_NOTIFIER_RULE: z.string(),
     SMTP_SERVICE: z.string(),
     SMTP_HOST: z.string(),
     SMTP_PORT: z.preprocess(Number, z.number()),
@@ -46,6 +47,11 @@ export class Config {
         origin: data['API_ORIGIN'],
         geo: {
           url: data['API_GEO_URL'],
+        },
+      },
+      job: {
+        notifier: {
+          rule: data['JOB_NOTIFIER_RULE'],
         },
       },
       smtp: {

@@ -1,36 +1,44 @@
 import { setInterval, clearInterval } from 'node:timers';
+import logger from 'loglevel';
 
 import { customError, safeExecution } from '../common/index.js';
 import { BaseRule } from './rules/base.rule.js';
+import { BaseJob } from './jobs/base.job.js';
 
 export class Scheduler {
   static Error = customError(Scheduler.name);
 
-  constructor (options) {
+  constructor (options = {}) {
     this.map = new Map();
     this.cycleMs = options.cycleMs ?? 1000;
   }
 
-  register (name, rule, action) {
-    if (!(rule instanceof BaseRule)) throw new Scheduler.Error(`Invalid rule for job: ${name}`);
+  register (job, rule) {
+    if (!(job instanceof BaseJob)) throw new Scheduler.Error(`Invalid job`);
+    if (!(rule instanceof BaseRule)) throw new Scheduler.Error(`Invalid rule for job: ${job.name}`);
 
-    this.map.set(name, { rule, action });
+    this.map.set(job, rule);
   }
 
-  run () {
+  start () {
     logger.info('Scheduler started');
 
     const cycle = () => {
-      for (const [ name, { rule, action } ] of this.map.entries()) {
+      const now = Date.now();
+
+      for (const [ job, rule ] of this.map.entries()) {
         safeExecution(async () => {
-          if (Date.now() < rule.getTime()) return;
+          const time = rule.getTime();
 
-          logger.info(`Scheduler:${name}:job:started`);
+          // Sufficient for now, but risky
+          if (now < time.setMilliseconds(0) || now > time.setMilliseconds(999)) return;
 
-          await action();
+          logger.info(`Scheduler:${job.name}:job:started`);
+
+          await job.run();
+
+          logger.info(`Scheduler:${job.name}:job:ended`);
         });
-
-        continue;
       }
     }
 

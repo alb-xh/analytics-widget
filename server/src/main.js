@@ -1,14 +1,20 @@
 import http from 'node:http';
 import logger from 'loglevel';
+import nodemailer from 'nodemailer';
 
 import { Config, Request, Response, Env } from './common/index.js';
 import { InMemoryCache, RateLimiter } from './components/index.js';
 import { EventsController } from './controllers/index.js';
-import { DB, EventsCollection } from './db/index.js';
+import { EventsCollection } from './collections/index.js';
 import { GeoApi } from './apis/index.js';
+import { Scheduler, DailyRule, NotifierJob } from './schedule/index.js';
+import { DB } from './db.js';
 
 const config = Config.load();
 logger.setLevel(config.env === Env.Dev ? 'DEBUG' : 'INFO');
+
+const scheduler = new Scheduler();
+const mailTransporter = nodemailer.createTransport(config.smtp);
 
 const db = new DB(config.db.path);
 const eventsCollection = new EventsCollection(db);
@@ -41,3 +47,10 @@ const server = http.createServer(async (request, response) => {
 server.listen(config.server.port, () => {
   logger.info('Server is listening');
 });
+
+scheduler.register(
+  new NotifierJob(config.smtp, mailTransporter, eventsCollection),
+  new DailyRule(config.job.notifier.rule),
+);
+
+scheduler.start();

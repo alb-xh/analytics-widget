@@ -1,4 +1,5 @@
-import { BaseRule } from "./rules/base.rule.js";
+import { customError } from "../../common/custom-error.js";
+import { BaseRule } from "./base.rule.js";
 
 export class DailyRule extends BaseRule {
   static Error = customError(DailyRule.name);
