@@ -10,7 +10,7 @@ export class EventsController extends BaseController {
   static GetQuerySchema = z.object({
     app: z.string().min(3).max(20),
     type: z.enum(Object.values(EventType)),
-    // date: z.preprocess((str) => new Date(str), z.date()),
+    since: z.preprocess((str) => new Date(str), z.date()).optional(),
     offset: z.preprocess(Number, z.number().min(0)).default(0),
     limit: z.preprocess(Number, z.number().min(0).max(100)).default(10),
   });
@@ -41,10 +41,12 @@ export class EventsController extends BaseController {
       return res.badRequest();
     }
 
-    const { type, app, offset, limit } = data;
+    const { type, app, since, offset, limit } = data;
 
-    const results = await this.eventsCollection
-      .find((entry) => entry.type === type && entry.app === app, { offset, limit });
+    const results = await this.eventsCollection.find(
+      (entry) => entry.type === type && entry.app === app && (!since || new Date(entry.timestamp) >= since),
+      { offset, limit },
+    );
 
     res.ok({ results });
   }
