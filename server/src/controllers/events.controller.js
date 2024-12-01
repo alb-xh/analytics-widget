@@ -30,6 +30,10 @@ export class EventsController extends BaseController {
     this.geoApi = geoApi;
   }
 
+  options (req, res) {
+    res.allowCors();
+  }
+
   async get (req, res) {
     if (req.getAuthorization() !== `Bearer ${this.apiKey}`) {
       return res.unauthorized();

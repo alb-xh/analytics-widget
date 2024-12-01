@@ -1,5 +1,4 @@
-import { Logger } from "./logger.component";
-import { Utils } from "./utils.component";
+import { logger, Utils } from "../common/index.js";
 
 export class Queue {
   constructor (name, config = {}) {
@@ -20,7 +19,7 @@ export class Queue {
       createdAt: new Date().toISOString(),
     };
 
-    Logger.debug(`${this.name} Queue`, 'new entry was pushed', entry);
+    logger.debug(`${this.name} Queue`, 'new entry was pushed', entry);
 
     this.entries.unshift(entry);
 
@@ -34,7 +33,7 @@ export class Queue {
 
     this.processing = true;
 
-    Logger.debug(`${this.name} Queue`, 'processing started');
+    logger.debug(`${this.name} Queue`, 'processing started');
 
     while (this.entries.length > 0) {
       const entry = this.entries.pop();
@@ -48,13 +47,13 @@ export class Queue {
 
     this.processing = false;
 
-    Logger.debug(`${this.name} Queue`, 'processing ended');
+    logger.debug(`${this.name} Queue`, 'processing ended');
   }
 
   async processEntry (entry) {
     const retry = () => {
       if (entry.retries >= this.maxRetries) {
-        Logger.error(`${this.name} Queue`, 'canceled', entry);
+        logger.error(`${this.name} Queue`, 'canceled', entry);
         return;
       }
 
@@ -69,7 +68,7 @@ export class Queue {
         retry();
       }
     } catch (err) {
-      Logger.error(`${this.name} Queue`, 'processing failed', err);
+      logger.error(`${this.name} Queue`, 'processing failed', err);
 
       retry();
     }

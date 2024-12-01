@@ -36,4 +36,16 @@ export class Response {
   created (message = 'Created') {
     this.json(201, { message });
   }
+
+  noContent () {
+    this.res.writeHead(204)
+    this.res.end();
+  }
+
+  allowCors () {
+    this.res.setHeader('Access-Control-Allow-Origin', '*');
+    this.res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    this.res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
+    this.noContent();
+  }
 }
