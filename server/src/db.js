@@ -13,7 +13,7 @@ export class DB {
     const { offset = 0, limit = Infinity } = options;
     const results = [];
 
-    const fd = await fs.open(this.path, 'r');
+    const fd = await fs.open(this.path, 'w+');
 
     for await (const line of fd.readLines()) {
       const row = JSON.parse(line);
